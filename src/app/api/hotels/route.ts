@@ -105,45 +105,50 @@ export async function GET(request: Request): Promise<NextResponse> {
             }
         });
 
-        // Transform data
+        // Transform data with error isolation
         let transformedHotels = hotels.map((hotel: any) => {
-            // Calculate walking time if missing in DB
-            let timeInMinutes = (hotel as any).timeInMinutes;
-            if (!timeInMinutes && hotel.distance) {
-                const match = hotel.distance.match(/(\d+\.?\d*)/);
-                if (match) {
-                    const km = parseFloat(match[1]);
-                    timeInMinutes = Math.max(1, Math.round(km * 12));
+            try {
+                // Calculate walking time if missing in DB
+                let timeInMinutes = (hotel as any).timeInMinutes;
+                if (!timeInMinutes && hotel.distance) {
+                    const match = hotel.distance.match(/(\d+\.?\d*)/);
+                    if (match) {
+                        const km = parseFloat(match[1]);
+                        timeInMinutes = Math.max(1, Math.round(km * 12));
+                    }
                 }
-            }
 
-            return {
-                ...hotel,
-                timeInMinutes,
-                images: safeJsonParse(hotel.images, []),
-                features: safeJsonParse(hotel.features, []),
-                coordinates: [hotel.latitude, hotel.longitude] as [number, number],
-                availableFrom: hotel.availableFrom,
-                availableTo: hotel.availableTo,
-                amenities: hotel.amenities.map((ha: any) => ({
-                    label: ha.amenity.label,
-                    icon: ha.amenity.icon
-                })),
-                rooms: hotel.rooms.map((room: any) => ({
-                    ...room,
-                    features: safeJsonParse(room.features, []),
-                    images: safeJsonParse(room.images, []),
-                    capacity: {
-                        adults: room.capacityAdults,
-                        children: room.capacityChildren
-                    },
-                    maxExtraBeds: room.maxExtraBeds || 0,
-                    extraBedPrice: room.extraBedPrice || 0,
-                    availableFrom: room.availableFrom,
-                    availableTo: room.availableTo
-                }))
-            };
-        });
+                return {
+                    ...hotel,
+                    timeInMinutes,
+                    images: safeJsonParse(hotel.images, []),
+                    features: safeJsonParse(hotel.features, []),
+                    coordinates: [hotel.latitude, hotel.longitude] as [number, number],
+                    availableFrom: hotel.availableFrom,
+                    availableTo: hotel.availableTo,
+                    amenities: hotel.amenities.map((ha: any) => ({
+                        label: ha.amenity.label,
+                        icon: ha.amenity.icon
+                    })),
+                    rooms: hotel.rooms.map((room: any) => ({
+                        ...room,
+                        features: safeJsonParse(room.features, []),
+                        images: safeJsonParse(room.images, []),
+                        capacity: {
+                            adults: room.capacityAdults,
+                            children: room.capacityChildren
+                        },
+                        maxExtraBeds: room.maxExtraBeds || 0,
+                        extraBedPrice: room.extraBedPrice || 0,
+                        availableFrom: room.availableFrom,
+                        availableTo: room.availableTo
+                    }))
+                };
+            } catch (err) {
+                console.error(`Skipping corrupted hotel ${hotel.id}:`, err);
+                return null;
+            }
+        }).filter(h => h !== null);
 
         // Guest Filtering
         const adults = parseInt(searchParams.get('adults') || '0');
