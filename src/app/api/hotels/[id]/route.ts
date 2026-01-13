@@ -18,7 +18,8 @@ async function checkAdmin() {
 const safeJsonParse = (jsonString: string | null | undefined, fallback: any = []) => {
     if (!jsonString) return fallback;
     try {
-        return JSON.parse(jsonString);
+        const parsed = JSON.parse(jsonString);
+        return parsed !== null ? parsed : fallback;
     } catch (error) {
         console.error('JSON Parse Error:', error);
         return fallback;

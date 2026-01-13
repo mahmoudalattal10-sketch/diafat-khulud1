@@ -8,10 +8,12 @@ const prisma = new PrismaClient();
 // GET /api/hotels
 // Query Params: destination, guests, minPrice, maxPrice, rating
 // Helper to safely parse JSON
+// Helper to safely parse JSON
 const safeJsonParse = (jsonString: string | null | undefined, fallback: any = []) => {
     if (!jsonString) return fallback;
     try {
-        return JSON.parse(jsonString);
+        const parsed = JSON.parse(jsonString);
+        return parsed !== null ? parsed : fallback;
     } catch (error) {
         console.error('JSON Parse Error:', error);
         return fallback;
