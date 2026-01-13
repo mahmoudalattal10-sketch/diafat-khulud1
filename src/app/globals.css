@@ -1,0 +1,151 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Font Import */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+    --primary-green: #1B5E3A;
+    --primary-gold: #C9A227;
+    --background: #FFFFFF;
+    --foreground: #1a1a1a;
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    direction: rtl;
+    text-align: right;
+    overflow-x: hidden;
+}
+
+/* Glassmorphism utility */
+.glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-secondary-500;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-secondary-600;
+}
+
+/* Button hover effects */
+.btn-primary {
+    @apply bg-primary-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300;
+}
+
+.btn-primary:hover {
+    @apply bg-primary-600 shadow-lg transform -translate-y-0.5;
+}
+
+.btn-secondary {
+    @apply bg-secondary-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300;
+}
+
+.btn-secondary:hover {
+    @apply bg-secondary-600 shadow-lg transform -translate-y-0.5;
+}
+
+/* Card styles */
+.card {
+    @apply bg-white rounded-2xl shadow-card transition-all duration-300;
+}
+
+.card:hover {
+    @apply shadow-card-hover transform -translate-y-1;
+}
+
+/* Input styles */
+.input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 outline-none transition-all duration-200;
+}
+
+/* Section padding */
+.section-padding {
+    @apply py-16 md:py-24 px-4 md:px-8;
+}
+
+/* Container */
+.container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Gradient text */
+.gradient-text {
+    background: linear-gradient(135deg, #C9A227 0%, #1B5E3A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Hero overlay */
+.hero-overlay {
+    background: linear-gradient(to bottom,
+            rgba(201, 162, 39, 0.4) 0%,
+            rgba(201, 162, 39, 0.6) 50%,
+            rgba(201, 162, 39, 0.8) 100%);
+}
+
+/* Loading animation */
+@keyframes shimmer {
+    0% {
+        background-position: -200px 0;
+    }
+
+    100% {
+        background-position: calc(200px + 100%) 0;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Hide scrollbar */
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Subtle Background Pattern */
+.bg-pattern {
+    background-color: #f8fafc;
+    background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+    background-size: 24px 24px;
+}

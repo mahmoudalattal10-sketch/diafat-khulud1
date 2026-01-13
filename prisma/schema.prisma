@@ -1,0 +1,173 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  password  String
+  name      String?
+  phone     String?
+  image     String?   // User avatar
+  role      String    @default("USER") // ADMIN, USER
+  bookings  Booking[]
+  reviews   Review[]
+  wishlist  Wishlist[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Hotel {
+  id          Int       @id @default(autoincrement())
+  name        String
+  location    String
+  distance    String
+  latitude    Float?
+  longitude   Float?
+  rating      Float
+  reviews     Int       @default(0)
+  price       Float
+  description String
+  images      String    // JSON string of image URLs
+  badge       String?
+  features    String    // JSON string of features
+  isFeatured  Boolean   @default(false)
+  timeInMinutes Int?
+  
+  availableFrom DateTime?
+  availableTo   DateTime?
+  
+  amenities   HotelAmenity[]
+  rooms       Room[]
+  nearby      NearbyPlace[]
+  bookings    Booking[]
+  wishlist    Wishlist[]
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  reviewsList Review[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  hotelId   Int
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Room {
+  id              String    @id @default(cuid())
+  hotelId         Int
+  hotel           Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  
+  name            String
+  type            String    // single, double, suite, etc.
+  price           Float
+  capacityAdults  Int
+  capacityChildren Int
+  maxExtraBeds    Int       @default(0)
+  extraBedPrice   Float     @default(0)
+  occupancyPrices String?   // JSON string for OBP
+  beds            String
+  size            String
+  view            String
+  features        String    // JSON string
+  images          String    // JSON string
+  status          String    @default("active") // active, maintenance
+  availableCount  Int       @default(1)
+
+  availableFrom   DateTime?
+  availableTo     DateTime?
+
+  bookings        Booking[]
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Amenity {
+  id      String         @id @default(cuid())
+  icon    String
+  label   String
+  hotels  HotelAmenity[]
+}
+
+model HotelAmenity {
+  hotelId   Int
+  hotel     Hotel   @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  amenityId String
+  amenity   Amenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([hotelId, amenityId])
+}
+
+model NearbyPlace {
+  id      String @id @default(cuid())
+  hotelId Int
+  hotel   Hotel  @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  label   String
+  dist    String
+  type    String
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  hotelId     Int
+  hotel       Hotel    @relation(fields: [hotelId], references: [id])
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id])
+  
+  checkIn     DateTime
+  checkOut    DateTime
+  totalPrice  Float
+  status      String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+
+  guestName   String?
+  guestEmail  String?
+  guestPhone  String?
+  paymentRef  String?  // PayTabs Transaction Reference
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotelId   Int
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+
+  @@unique([userId, hotelId])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  status    String   @default("UNREAD") // UNREAD, READ, ARCHIVED
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
