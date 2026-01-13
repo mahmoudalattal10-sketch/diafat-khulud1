@@ -1,12 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient({
-    datasources: {
-        db: {
-            url: 'file:./dev.db',
-        },
-    },
-});
+const prisma = new PrismaClient();
 
 // Standard Amenities Mapping
 const AMENITY_MAP: Record<string, string> = {
