@@ -19,6 +19,11 @@ const safeJsonParse = (jsonString: string | null | undefined, fallback: any = []
     if (!jsonString) return fallback;
     try {
         const parsed = JSON.parse(jsonString);
+        // If fallback is an array, enforce parsed is also an array
+        if (Array.isArray(fallback) && !Array.isArray(parsed)) {
+            console.warn('JSON Parse Warning: Expected array but got ' + typeof parsed);
+            return fallback;
+        }
         return parsed !== null ? parsed : fallback;
     } catch (error) {
         console.error('JSON Parse Error:', error);
