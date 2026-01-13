@@ -22,7 +22,7 @@ async function main() {
 
     for (const h of hotels) {
         console.log(`Found: ${h.name} (Current: ${h.latitude}, ${h.longitude})`);
-        if (Math.abs(h.latitude - lat) > 0.0001 || Math.abs(h.longitude - lng) > 0.0001) {
+        if (h.latitude && h.longitude && (Math.abs(h.latitude - lat) > 0.0001 || Math.abs(h.longitude - lng) > 0.0001)) {
             console.log(`Updating to ${lat}, ${lng}...`);
             await prisma.hotel.update({
                 where: { id: h.id },

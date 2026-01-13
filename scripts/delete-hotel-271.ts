@@ -12,7 +12,7 @@ async function main() {
             where: { id: idToDelete }
         });
         console.log('Successfully deleted hotel.');
-    } catch (e) {
+    } catch (e: any) {
         console.log('Error deleting hotel (might not exist):', e.message);
     }
 }
