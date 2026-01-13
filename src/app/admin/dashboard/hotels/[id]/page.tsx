@@ -51,6 +51,7 @@ import { useHotelsStore } from '@/store/hotelsStore';
 import { toast } from 'react-hot-toast';
 import ModernDatePicker from '@/components/ui/ModernDatePicker';
 import ModernSelect from '@/components/ui/ModernSelect';
+import NumericInput from '@/components/ui/NumericInput';
 
 // Icon Map for Amenities & Nearby
 const AMENITY_ICONS = [
@@ -658,11 +659,10 @@ export default function HotelEditorPage() {
                                                 <span className="text-gray-400 font-bold text-sm">السعر الأساسي</span>
                                                 <div className="text-right">
                                                     <div className="flex items-center gap-2">
-                                                        <input
-                                                            type="number"
+                                                        <NumericInput
                                                             value={hotel.price}
-                                                            onChange={(e) => updateField('price', Number(e.target.value))}
-                                                            className="w-24 bg-white/10 rounded-lg px-3 py-2 text-primary-400 font-black text-right outline-none focus:bg-white/20 transition-all"
+                                                            onChange={(val) => updateField('price', val)}
+                                                            className="w-24 bg-white/10 rounded-lg px-3 py-2 text-primary-400 font-black text-right outline-none focus:bg-white/20 transition-all border-none"
                                                         />
                                                         <span className="text-xs text-white/40">ر.س</span>
                                                     </div>
@@ -672,7 +672,7 @@ export default function HotelEditorPage() {
                                             <div className="flex items-center justify-between py-4 border-b border-white/10">
                                                 <span className="text-gray-400 font-bold text-sm">عدد الغرف</span>
                                                 <input
-                                                    type="number"
+                                                    type="text"
                                                     value={hotel.rooms?.length || 0}
                                                     readOnly
                                                     className="w-20 bg-white/10 rounded-lg px-3 py-2 text-white font-black text-right outline-none"
@@ -862,11 +862,9 @@ export default function HotelEditorPage() {
                                                     <div className="space-y-1">
                                                         <label className="text-[9px] font-black text-gray-400 uppercase">السعة</label>
                                                         <div className="relative">
-                                                            <input
-                                                                type="number"
+                                                            <NumericInput
                                                                 value={typeof room.capacity === 'number' ? room.capacity : (room.capacity?.adults || 2)}
-                                                                onChange={(e) => {
-                                                                    const val = Number(e.target.value);
+                                                                onChange={(val) => {
                                                                     // Update as object to match interface
                                                                     updateRoom(idx, 'capacity', { adults: val, children: 0 });
                                                                 }}
@@ -877,10 +875,9 @@ export default function HotelEditorPage() {
                                                     </div>
                                                     <div className="space-y-1">
                                                         <label className="text-[9px] font-black text-gray-400 uppercase">المساحة</label>
-                                                        <input
-                                                            type="number"
+                                                        <NumericInput
                                                             value={room.size || 25}
-                                                            onChange={(e) => updateRoom(idx, 'size', Number(e.target.value))}
+                                                            onChange={(val) => updateRoom(idx, 'size', val)}
                                                             className="w-full h-10 px-3 bg-white rounded-lg border border-gray-200 focus:border-primary-500 font-bold text-sm outline-none"
                                                         />
                                                     </div>
@@ -893,32 +890,18 @@ export default function HotelEditorPage() {
                                                     <label className="text-[10px] font-black text-primary-600 uppercase tracking-widest">السعر الأساسي / ليلة</label>
                                                     <div className="flex gap-2">
                                                         <div className="relative flex-1">
-                                                            <input
-                                                                type="text"
-                                                                inputMode="numeric"
-                                                                value={room.price ?? ''}
-                                                                onChange={(e) => {
-                                                                    const val = e.target.value;
-                                                                    // Allow empty or numeric input
-                                                                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                                                                        updateRoom(idx, 'price', val === '' ? '' : val);
-                                                                    }
-                                                                }}
-                                                                onBlur={(e) => {
-                                                                    // Convert to number on blur
-                                                                    const num = parseFloat(e.target.value) || 0;
-                                                                    updateRoom(idx, 'price', num);
-                                                                }}
+                                                            <NumericInput
+                                                                value={room.price ?? 0}
+                                                                onChange={(val) => updateRoom(idx, 'price', val)}
                                                                 className="w-full h-12 px-4 bg-primary-50 text-primary-700 rounded-xl border border-primary-100 focus:bg-white focus:border-primary-500 font-black text-lg outline-none"
                                                             />
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-primary-500 font-bold">ر.س</span>
                                                         </div>
                                                         <div className="w-20">
-                                                            <input
-                                                                type="number"
-                                                                min="0"
+                                                            <NumericInput
+                                                                min={0}
                                                                 value={room.availableCount || 0}
-                                                                onChange={(e) => updateRoom(idx, 'availableCount', Number(e.target.value))}
+                                                                onChange={(val) => updateRoom(idx, 'availableCount', val)}
                                                                 className="w-full h-12 px-2 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100 focus:bg-white focus:border-emerald-500 font-black text-lg outline-none text-center"
                                                                 title="الكمية المتاحة"
                                                             />
