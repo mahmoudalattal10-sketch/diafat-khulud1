@@ -14,6 +14,17 @@ async function checkAdmin() {
     return true;
 }
 
+// Helper to safely parse JSON
+const safeJsonParse = (jsonString: string | null | undefined, fallback: any = []) => {
+    if (!jsonString) return fallback;
+    try {
+        return JSON.parse(jsonString);
+    } catch (error) {
+        console.error('JSON Parse Error:', error);
+        return fallback;
+    }
+};
+
 // GET /api/hotels/[id]
 export async function GET(request: Request, { params }: { params: { id: string } }) {
     try {
@@ -48,8 +59,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const transformedHotel = {
             ...(hotel as any),
             timeInMinutes,
-            images: JSON.parse(hotel.images),
-            features: JSON.parse(hotel.features),
+            images: safeJsonParse(hotel.images, []),
+            features: safeJsonParse(hotel.features, []),
             coordinates: [hotel.latitude, hotel.longitude] as [number, number],
             availableFrom: (hotel as any).availableFrom,
             availableTo: (hotel as any).availableTo,
@@ -59,15 +70,15 @@ export async function GET(request: Request, { params }: { params: { id: string }
             })),
             rooms: hotel.rooms.map((room: any) => ({
                 ...room,
-                features: JSON.parse(room.features),
-                images: JSON.parse(room.images),
+                features: safeJsonParse(room.features, []),
+                images: safeJsonParse(room.images, []),
                 capacity: {
                     adults: room.capacityAdults,
                     children: room.capacityChildren
                 },
                 maxExtraBeds: room.maxExtraBeds,
                 extraBedPrice: room.extraBedPrice,
-                occupancyPrices: room.occupancyPrices ? JSON.parse(room.occupancyPrices) : undefined,
+                occupancyPrices: room.occupancyPrices ? safeJsonParse(room.occupancyPrices, null) : undefined,
                 availableFrom: room.availableFrom,
                 availableTo: room.availableTo
             }))
@@ -267,12 +278,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         // Basic transformation
         const responseHotel = {
             ...updated,
-            images: updated?.images ? JSON.parse(updated.images) : [],
-            features: updated?.features ? JSON.parse(updated.features) : [],
+            images: safeJsonParse(updated.images, []),
+            features: safeJsonParse(updated.features, []),
             rooms: updated?.rooms.map(r => ({
                 ...r,
-                images: r.images ? JSON.parse(r.images) : [],
-                features: r.features ? JSON.parse(r.features) : [],
+                images: safeJsonParse(r.images, []),
+                features: safeJsonParse(r.features, []),
             }))
         };
 
