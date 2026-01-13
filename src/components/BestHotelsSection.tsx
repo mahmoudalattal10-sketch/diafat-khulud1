@@ -33,11 +33,14 @@ const cardVariants = {
 };
 
 export default function BestHotelsSection() {
-    const { hotels, fetchHotels } = useHotelsStore();
+    const { hotels, fetchHotels, error } = useHotelsStore();
 
     useEffect(() => {
         if (hotels.length === 0) fetchHotels();
     }, []);
+
+    // Debugging
+    console.log('BestHotelsSection - Hotels:', hotels.length, 'Error:', error);
     const featuredHotels = hotels.filter(h => h.isFeatured).slice(0, 4);
 
     // Fallback if no featured hotels (show top rated)

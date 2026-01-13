@@ -121,8 +121,8 @@ export async function GET(request: Request): Promise<NextResponse> {
                 return {
                     ...hotel,
                     timeInMinutes,
-                    images: safeJsonParse(hotel.images, []),
-                    features: safeJsonParse(hotel.features, []),
+                    images: safeJsonParse(hotel.images, []).filter((img: any) => typeof img === 'string' && img.trim() !== ''),
+                    features: safeJsonParse(hotel.features, []).filter((f: any) => typeof f === 'string' && f.trim() !== ''),
                     coordinates: [hotel.latitude, hotel.longitude] as [number, number],
                     availableFrom: hotel.availableFrom,
                     availableTo: hotel.availableTo,
@@ -132,8 +132,8 @@ export async function GET(request: Request): Promise<NextResponse> {
                     })),
                     rooms: hotel.rooms.map((room: any) => ({
                         ...room,
-                        features: safeJsonParse(room.features, []),
-                        images: safeJsonParse(room.images, []),
+                        features: safeJsonParse(room.features, []).filter((f: any) => typeof f === 'string' && f.trim() !== ''),
+                        images: safeJsonParse(room.images, []).filter((img: any) => typeof img === 'string' && img.trim() !== ''),
                         capacity: {
                             adults: room.capacityAdults,
                             children: room.capacityChildren
