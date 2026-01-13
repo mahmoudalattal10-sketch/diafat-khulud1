@@ -5,8 +5,10 @@ import { MapPin, Search, Sparkles, Star, Shield, Clock, Check, ChevronDown, Buil
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import DateRangePicker from './DateRangePicker';
-import GuestSelector from './GuestSelector';
+import dynamic from 'next/dynamic';
+
+const DateRangePicker = dynamic(() => import('./DateRangePicker'), { ssr: false });
+const GuestSelector = dynamic(() => import('./GuestSelector'), { ssr: false });
 
 import { HOTELS_DATA } from '@/data/hotels';
 
@@ -28,9 +30,9 @@ const popupVariants = {
         y: 0,
         scale: 1,
         transition: {
-            type: "spring",
-            stiffness: 300,
-            damping: 24,
+            type: "tween",
+            ease: "easeOut",
+            duration: 0.2
         }
     },
     exit: {
@@ -38,7 +40,7 @@ const popupVariants = {
         y: -10,
         scale: 0.95,
         transition: {
-            duration: 0.2,
+            duration: 0.15,
         }
     }
 };
@@ -141,29 +143,18 @@ export default function HeroSection() {
             {/* Modern Geometric Background */}
             <div className="absolute inset-0 overflow-hidden">
                 {/* Gradient Orbs */}
-                <motion.div
-                    className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full"
+                {/* Gradient Orbs - Optimized with CSS Animation */}
+                <div
+                    className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full animate-float"
                     style={{
                         background: 'radial-gradient(circle, rgba(27, 94, 58, 0.08) 0%, transparent 70%)',
-                        willChange: 'transform',
                     }}
-                    animate={{
-                        scale: [1, 1.1, 1],
-                        x: [0, 30, 0],
-                    }}
-                    transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut' }}
                 />
-                <motion.div
-                    className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full"
+                <div
+                    className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full animate-float-reverse"
                     style={{
                         background: 'radial-gradient(circle, rgba(201, 162, 39, 0.08) 0%, transparent 70%)',
-                        willChange: 'transform',
                     }}
-                    animate={{
-                        scale: [1.1, 1, 1.1],
-                        y: [0, -30, 0],
-                    }}
-                    transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
                 />
 
                 {/* Grid Pattern */}
@@ -195,7 +186,7 @@ export default function HeroSection() {
                     <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
                         className="text-center lg:text-right order-2 lg:order-1"
                     >
                         {/* Badge */}
@@ -288,7 +279,7 @@ export default function HeroSection() {
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                         className="order-1 lg:order-2 overflow-visible"
                     >
                         {/* Modern Search Card */}
