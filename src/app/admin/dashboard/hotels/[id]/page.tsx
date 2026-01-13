@@ -492,6 +492,20 @@ export default function HotelEditorPage() {
                                                 </button>
                                             </div>
 
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-black text-gray-400 uppercase tracking-widest">عرض في الرئيسية</label>
+                                                <button
+                                                    onClick={() => updateField('isFeatured', !hotel.isFeatured)}
+                                                    className={`w-full h-14 px-5 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-all ${hotel.isFeatured
+                                                        ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20'
+                                                        : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+                                                        }`}
+                                                >
+                                                    <Crown size={18} className={hotel.isFeatured ? 'fill-white' : ''} />
+                                                    {hotel.isFeatured ? 'فندق مختار' : 'عادي'}
+                                                </button>
+                                            </div>
+
                                             <div className="space-y-2 col-span-3 md:col-span-3">
                                                 <label className="text-xs font-black text-gray-400 uppercase tracking-widest">فترة الإتاحة (من - إلى)</label>
                                                 <div className="flex flex-col md:flex-row gap-4">
