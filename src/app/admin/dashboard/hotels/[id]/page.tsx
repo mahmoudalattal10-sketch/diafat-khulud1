@@ -894,9 +894,21 @@ export default function HotelEditorPage() {
                                                     <div className="flex gap-2">
                                                         <div className="relative flex-1">
                                                             <input
-                                                                type="number"
-                                                                value={room.price}
-                                                                onChange={(e) => updateRoom(idx, 'price', Number(e.target.value))}
+                                                                type="text"
+                                                                inputMode="numeric"
+                                                                value={room.price ?? ''}
+                                                                onChange={(e) => {
+                                                                    const val = e.target.value;
+                                                                    // Allow empty or numeric input
+                                                                    if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                                                                        updateRoom(idx, 'price', val === '' ? '' : val);
+                                                                    }
+                                                                }}
+                                                                onBlur={(e) => {
+                                                                    // Convert to number on blur
+                                                                    const num = parseFloat(e.target.value) || 0;
+                                                                    updateRoom(idx, 'price', num);
+                                                                }}
                                                                 className="w-full h-12 px-4 bg-primary-50 text-primary-700 rounded-xl border border-primary-100 focus:bg-white focus:border-primary-500 font-black text-lg outline-none"
                                                             />
                                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] text-primary-500 font-bold">ر.س</span>
