@@ -2,6 +2,17 @@
 const nextConfig = {
     output: 'standalone',
     poweredByHeader: false,
+
+    // Performance optimizations
+    reactStrictMode: true,
+    swcMinify: true,
+
+    // Remove console.log in production
+    compiler: {
+        removeConsole: process.env.NODE_ENV === 'production',
+    },
+
+    // Optimize images
     images: {
         remotePatterns: [
             {
@@ -9,7 +20,17 @@ const nextConfig = {
                 hostname: '**',
             },
         ],
+        // Reduce image quality for faster loading on mobile
+        deviceSizes: [640, 750, 828, 1080, 1200],
+        imageSizes: [16, 32, 48, 64, 96, 128, 256],
+        formats: ['image/webp'],
     },
+
+    // Experimental performance features
+    experimental: {
+        optimizeCss: true,
+    },
+
     async headers() {
         return [
             {
